@@ -1,28 +1,27 @@
 from pydantic import BaseModel
 
-# Base schema
-class StudentBase(BaseModel):
+
+# ---------- Department ----------
+
+class DepartmentBase(BaseModel):
     name: str
-    email: str
 
 
-# Create schema
-class StudentCreate(StudentBase):
+class DepartmentCreate(DepartmentBase):
     pass
 
 
-# Profile base schema
+# ---------- Student Profile ----------
+
 class StudentProfileBase(BaseModel):
     address: str
     phone: str
 
 
-# Profile create schema
 class StudentProfileCreate(StudentProfileBase):
     pass
 
 
-# Profile response schema
 class StudentProfileResponse(StudentProfileBase):
     id: int
 
@@ -30,10 +29,35 @@ class StudentProfileResponse(StudentProfileBase):
         from_attributes = True
 
 
-# Student response schema
+# ---------- Student ----------
+
+class StudentBase(BaseModel):
+    name: str
+    email: str
+
+
+class StudentCreate(StudentBase):
+    department_id: int
+
+
+class StudentUpdate(StudentBase):
+    department_id: int
+
+
 class StudentResponse(StudentBase):
     id: int
     profile: StudentProfileResponse | None = None
+
+    class Config:
+        from_attributes = True
+
+
+# ---------- Department Response ----------
+
+class DepartmentResponse(BaseModel):
+    id: int
+    name: str
+    students: list[StudentResponse] = []
 
     class Config:
         from_attributes = True
